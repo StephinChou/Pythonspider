@@ -20,8 +20,7 @@ class QiubaiSpider(SpiderHTML):
 			reqUrl = self.__url['new']
 		for i in range(self._pageStart,self._pageEnd):
 			pageUrl = reqUrl+str(i)+'/'
-			content = self.getUrl(pageUrl)
-			jokes = self.getAllContent(content)
+			jokes = self.getUrl(pageUrl)
 			jokes = jokes.find_all('div',id=re.compile('qiushi_tag_\d+'))
 			filepath = os.path.join('E:\\','qiubai','page_'+self._contentType+str(i))
 			info = '正在保存第{page}页的糗事到文件 {file}.txt'
@@ -42,7 +41,7 @@ class QiubaiSpider(SpiderHTML):
 				joke = '-----------------------------\r\n作者：{author}\r\n{joke}\r\n\r\n{upvote}人觉得很赞\r\n'.format(joke=jokeContent.strip(),author=author,upvote=upvote)
 				
 				self.saveText(filepath+'.txt',joke,'a')
-			if i%2 == 0://防止被封，间隔时间长一点
+			if i%2 == 0:		#防止被封，间隔时间长一点
 				time.sleep(random.random()*3)
 
 if __name__ == '__main__':
