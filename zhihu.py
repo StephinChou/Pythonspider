@@ -4,11 +4,13 @@ from spider import SpiderHTML
 import sys,urllib,http,os,random,re,time
 __author__ = 'waiting'
 '''
-使用了第三方的类库 BeautifulSoup4,需要spider.py文件
+使用了第三方的类库 BeautifulSoup4，请自行安装
+需要目录下的spider.py文件
+运行环境：python3.4,windows7
 '''
 
 #收藏夹的地址
-url = 'https://www.zhihu.com/collection/69135664?page='
+url = 'https://www.zhihu.com/collection/69135664'  #page参数改为代码添加
 
 #本地存放的路径,不存在会自动创建
 store_path = 'E:\\zhihu\收藏夹\\攻不可破的大美妞阵线联盟'
@@ -22,7 +24,7 @@ class zhihuCollectionSpider(SpiderHTML):
 
 	def start(self):
 		for page in range(self._pageStart,self._pageEnd):		#收藏夹的页数
-			url = self._url + str(page)
+			url = self._url + '?page='+str(page)
 			content = self.getUrl(url)
 			questionList = content.find_all('div',class_='zm-item')
 			for question in questionList:						#收藏夹的每个问题
@@ -47,7 +49,7 @@ class zhihuCollectionSpider(SpiderHTML):
 			
 			upvoted = int(answer.find('span',class_='count').string.replace('K','000')) 	#获得此答案赞同数
 			if upvoted < 100:
-				pass
+				continue
 			authorInfo = answer.find('div',class_='zm-item-answer-author-info')				#获取作者信息
 			author = {'introduction':'','link':''}
 			try:
@@ -101,7 +103,7 @@ class zhihuCollectionSpider(SpiderHTML):
 			except http.client.IncompleteRead:
 				pass
 	#收录文字
-	def getTextFromAnswer(self):
+	def _getTextFromAnswer(self):
 		pass
 
 #例：zhihu.py 1 5   获取1到5页的数据
