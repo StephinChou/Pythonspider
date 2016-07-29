@@ -48,7 +48,7 @@ class zhihuCollectionSpider(SpiderHTML):
 			j = j + 1
 			
 			upvoted = int(answer.find('span',class_='count').string.replace('K','000')) 	#获得此答案赞同数
-			if upvoted < 100:
+			if upvoted < self.downLimit:
 				continue
 			authorInfo = answer.find('div',class_='zm-item-answer-author-info')				#获取作者信息
 			author = {'introduction':'','link':''}
