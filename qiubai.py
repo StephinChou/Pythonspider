@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-import sys,os,pdb,re,time,random
+import sys,os,pdb,re,time,random,datetime
 from spider import SpiderHTML
 from bs4 import BeautifulSoup
 
@@ -22,7 +22,7 @@ class QiubaiSpider(SpiderHTML):
 			pageUrl = reqUrl+str(i)+'/'
 			jokes = self.getUrl(pageUrl)
 			jokes = jokes.find_all('div',id=re.compile('qiushi_tag_\d+'))
-			filepath = os.path.join('E:\\','qiubai','page_'+self._contentType+str(i))
+			filepath = os.path.join('E:\\','qiubai',str(datetime.date.today())+self._contentType+str(i))
 			info = '正在保存第{page}页的糗事到文件 {file}.txt'
 			print(info.format(page=i,file=filepath))
 			for joke in jokes:

@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 
 from spider import SpiderHTML
+from multiprocessing import Pool
 import sys,urllib,http,os,random,re,time
 __author__ = 'waiting'
 '''
@@ -10,10 +11,10 @@ __author__ = 'waiting'
 '''
 
 #收藏夹的地址
-url = 'https://www.zhihu.com/collection/69135664'  #page参数改为代码添加
+url = 'https://www.zhihu.com/collection/30822111'  #page参数改为代码添加
 
 #本地存放的路径,不存在会自动创建
-store_path = 'E:\\zhihu\收藏夹\\攻不可破的大美妞阵线联盟'
+store_path = 'E:\\zhihu\收藏夹\\会员才知道的世界'
 
 class zhihuCollectionSpider(SpiderHTML):
 	def __init__(self,pageStart, pageEnd, url):
@@ -35,8 +36,15 @@ class zhihuCollectionSpider(SpiderHTML):
 				questionStr = Qtitle.a.string
 				Qurl = 'https://www.zhihu.com'+Qtitle.a['href']	#问题题目
 				Qtitle = re.sub(r'[\\/:*?"<>]','#',Qtitle.a.string)			#windows文件/目录名不支持的特殊符号
-				print('-----正在获取问题:'+Qtitle+'-----')		#获取到问题的链接和标题，进入抓取
-				Qcontent = self.getUrl(Qurl)
+				try:
+					print('-----正在获取问题:'+Qtitle+'-----')		#获取到问题的链接和标题，进入抓取
+				except UnicodeEncodeError:
+					print(r'---问题含有特殊字符无法显示---')
+				try:
+					Qcontent = self.getUrl(Qurl)
+				except:
+					print('!!!!获取出错!!!!!')
+					pass
 				answerList = Qcontent.find_all('div',class_='zm-item-answer  zm-item-expanded')
 				self._processAnswer(answerList,Qtitle)						#处理问题的答案
 				time.sleep(5)
@@ -48,23 +56,19 @@ class zhihuCollectionSpider(SpiderHTML):
 			j = j + 1
 			
 			upvoted = int(answer.find('span',class_='count').string.replace('K','000')) 	#获得此答案赞同数
-			if upvoted < 100:
+			if upvoted < self.downLimit:
 				continue
 			authorInfo = answer.find('div',class_='zm-item-answer-author-info')				#获取作者信息
 			author = {'introduction':'','link':''}
 			try:
 				author['name'] = authorInfo.find('a',class_='author-link').string 			#获得作者的名字
 				author['introduction'] = str(authorInfo.find('span',class_='bio')['title']) #获得作者的简介
+				author['link'] = authorInfo.find('a',class_='author-link')['href']			
 			except AttributeError:
 				author['name'] = '匿名用户'+str(j)
 			except TypeError:  																#简介为空的情况
-				pass
-	
-			try:
-				author['link'] = authorInfo.find('a',class_='author-link')['href']
-			except TypeError:  																#匿名用户没有链接
-				pass
-	
+				pass 																		#匿名用户没有链接
+
 			file_name = os.path.join(store_path,Qtitle,'info',author['name']+'_info.txt')
 			if os.path.exists(file_name):							#已经抓取过
 				continue
@@ -81,7 +85,6 @@ class zhihuCollectionSpider(SpiderHTML):
 			else:
 				self._getImgFromAnswer(imgs,Qtitle,**author)
 
-
 	#收录图片
 	def _getImgFromAnswer(self,imgs,Qtitle,**author):
 		i = 0
@@ -94,19 +97,14 @@ class zhihuCollectionSpider(SpiderHTML):
 			path_name = os.path.join(store_path,Qtitle,author['name']+'_'+str(i)+extension)
 			try:
 				self.saveImg(imgUrl,path_name)					#捕获各种图片异常，流程不中断
-			except ValueError:									
+			except:									
 				pass
-			except urllib.error.HTTPError as e:
-				pass
-			except KeyError as e:
-				pass
-			except http.client.IncompleteRead:
-				pass
+				
 	#收录文字
 	def _getTextFromAnswer(self):
 		pass
 
-#例：zhihu.py 1 5   获取1到5页的数据
+#命令行下运行，例：zhihu.py 1 5   获取1到5页的数据
 if __name__ == '__main__':
 	page, limit, paramsNum= 1, 0, len(sys.argv)
 	if paramsNum>=3:
