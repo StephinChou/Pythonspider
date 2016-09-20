@@ -1,12 +1,15 @@
-# -*- coding: UTF-8 -*-
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Date    : 2016-09-20 15:42:13
+# @Author  : waitingChou (zhouzt52@qq.com)
+# @Link    : https://github.com/StephinChou/
+
 from spider import SpiderHTML
 from multiprocessing import Pool
 import sys,urllib,http,os,random,re,time,codecs
 from selenium import webdriver
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 import pymysql
 pymysql.install_as_MySQLdb()
 
@@ -19,13 +22,12 @@ for line in f:
 __author__ = 'waiting'
 conn = pymysql.connect(host='localhost',user='root',passwd='',db='test',port=3306,use_unicode=True, charset="utf8")
 cur=conn.cursor()
-pattern = re.compile(r'\d+')
-driver = webdriver.Firefox()
+pattern = re.compile(r'\d+')    #获取av号的正则表达式
+driver = webdriver.Firefox()    #浏览器驱动，可以改成Chrome浏览器
 driver.implicitly_wait(5) # seconds
 
 orders = {"hot":"播放量","review":"评论数","promote":"硬币数","stow":"收藏数"}
 biliUrl = 'http://www.bilibili.com'
-#module 为 分类 :游戏 game 舞蹈 dance等
 
 class BilibiliSpider(SpiderHTML):
     def __init__(self,module,timeStart,timeEnd,limit):
@@ -134,6 +136,7 @@ class BilibiliSpider(SpiderHTML):
             return 0;
         return info
 
+#module 为 分类 :游戏 game 舞蹈 dance等
 module = 'game'
 #热度统计开始时间
 start = '2016-08-01'
