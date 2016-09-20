@@ -12,8 +12,9 @@
 
 ## 爬取B站 视频热度排行的 视频数据  bilibili.py
 * 只需输入一个大模块名，如游戏模块名为'game'，自行会爬取下面几个小类，并按播放数、硬币数等排行分别爬取
+* 需要安装selenium模块
 * 因为B站的数据由js获取，并且逻辑较为复杂，视频详细页的数据由 selenium模块来实现，效率不高，并且会miss
-* 关于selenium的信息，请谷歌"selenium python",这是我翻译的 [selenium + python 的文档](https://github.com/StephinChou/seleniumDocument)
+* 关于selenium的信息，请谷歌"selenium python",这是我翻译的 [selenium + python 的文档](https://github.com/StephinChou/seleniumDocument),可以参考一下
 * 目前爬取的信息有：
  * up主id
  * up主名
