@@ -1,0 +1,79 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script type='text/javascript'>
+
+$(function () {
+    $.getJSON('http://localhost/data.php?callback=?', function (data) {
+
+
+        $('#container').highcharts({
+            tooltip: {
+                xDateFormat: '%Y年%m月%d日 %H:%M',
+                shared: true
+            },
+            chart: {
+                zoomType: 'x'
+            },
+            title: {
+                text: 'B站在线人数的变化'
+            },
+            subtitle: {
+                text: document.ontouchstart === undefined ?
+                        '鼠标划取区域可以放大' : 'Pinch the chart to zoom in'
+            },
+            xAxis: {
+                type: 'datetime',
+                title: {
+                    text: '时间点'
+                }
+            },
+            yAxis: {
+                title: {
+                    text: '在线人数'
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                area: {
+                    fillColor: {
+                        linearGradient: {
+                            x1: 0,
+                            y1: 0,
+                            x2: 0,
+                            y2: 1
+                        },
+                        stops: [
+                            [0, Highcharts.getOptions().colors[0]],
+                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+                        ]
+                    },
+                    marker: {
+                        radius: 2
+                    },
+                    lineWidth: 1,
+                    states: {
+                        hover: {
+                            lineWidth: 1
+                        }
+                    },
+                    threshold: null
+                }
+            },
+
+            series: [{
+                type: 'area',
+                name: '在线人数',
+                data: data
+            }]
+        });
+    });
+});
+</script>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+<html>
