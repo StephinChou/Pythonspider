@@ -1,0 +1,92 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+ <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script type='text/javascript'>
+
+function run(order,limit,average) {
+    $.getJSON('http://localhost/bilidata.php?order='+order+'&limit='+limit+'&average='+average+'&callback=?', function (data) {
+
+	$('#container').highcharts({
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'B站8月视频统计'
+        },
+        subtitle: {
+            text: data['name']
+        },
+        xAxis: {
+            type: 'category',
+            labels: {
+                rotation: -30,
+                style: {
+                    fontSize: '13px',
+                    fontFamily: 'Verdana, sans-serif'
+                }
+            }
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: '数量 '
+            }
+        },
+        legend: {
+            enabled: false
+        },
+        tooltip: {
+            pointFormat: '<b>{point.y:.0f}</b>'
+        },
+        series: [{
+            name: data['name'],
+            data: data['data'],
+            dataLabels: {
+                enabled: true,
+                rotation: 0,
+                color: '#FFFFFF',
+                align: 'center',
+                format: '{point.y:.0f}', // one decimal
+                y: 0, // 10 pixels down from the top
+                style: {
+                    fontSize: '8px',
+                    fontFamily: 'Verdana, sans-serif',
+					fontWeight: "bold"
+                }
+            }
+        }]
+    });
+    });
+}
+</script>
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+统计类型：播放<input type="radio" name="order" value="play" />&nbsp;&nbsp;
+硬币<input type="radio" name="order" value="coin"/>&nbsp;&nbsp;
+收藏<input type="radio" name="order" value="collect"/>&nbsp;&nbsp;
+弹幕<input type="radio" name="order" value="danmu"/>
+
+<br>up主数量
+10<input type="radio" name="limit" value="10"/>&nbsp;&nbsp;
+15<input type="radio" name="limit" value="15"/>&nbsp;&nbsp;
+20<input type="radio" name="limit" value="20"/>
+
+<br>
+按视频平均数: 是<input type="radio" name="average" value="1"> &nbsp; 否<input type="radio" name="average" value="0" checked>
+
+<script type="text/javascript">
+$(function(){
+	$("input").click(function(){
+		var order = $("input[name='order']:checked").val();
+		var limit = $("input[name='limit']:checked").val();
+		var average = $("input[name='average']:checked").val();
+		
+		if(order !='' && limit!='' ){
+			run(order,limit,average);
+		}
+	});
+});
+</script>
+<div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+<html>
