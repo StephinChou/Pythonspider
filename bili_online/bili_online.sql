@@ -25,5 +25,5 @@ CREATE TABLE `bili_online` (
   `ctime` int(11) NOT NULL DEFAULT '0' COMMENT '时间戳',
   PRIMARY KEY (`id`),
   UNIQUE KEY `ctime` (`ctime`)
-) ENGINE=InnoDB AUTO_INCREMENT=504 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
