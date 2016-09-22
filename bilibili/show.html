@@ -1,6 +1,8 @@
 <html>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
- <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<link rel="stylesheet" href="http://cdn.amazeui.org/amazeui/2.7.2/css/amazeui.min.css">
+
 <script type='text/javascript'>
 
 function run(order,limit,average) {
@@ -62,30 +64,75 @@ function run(order,limit,average) {
 
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script src="https://code.highcharts.com/modules/exporting.js"></script>
-统计类型：播放<input type="radio" name="order" value="play" />&nbsp;&nbsp;
-硬币<input type="radio" name="order" value="coin"/>&nbsp;&nbsp;
-收藏<input type="radio" name="order" value="collect"/>&nbsp;&nbsp;
-弹幕<input type="radio" name="order" value="danmu"/>
 
-<br>up主数量
-10<input type="radio" name="limit" value="10"/>&nbsp;&nbsp;
-15<input type="radio" name="limit" value="15"/>&nbsp;&nbsp;
-20<input type="radio" name="limit" value="20"/>
 
-<br>
-按视频平均数: 是<input type="radio" name="average" value="1"> &nbsp; 否<input type="radio" name="average" value="0" checked>
+<div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">统计类型</div>
+            <div class="am-u-sm-8 am-u-md-10">
+              <div class="am-btn-group" data-am-button="">
+                <label class="am-btn am-btn-default am-btn-xs am-active" vName="order" vValue="play">
+                  <input type="radio" name="order" value="play"> 播放
+                </label>
+                <label class="am-btn am-btn-default am-btn-xs" vName="order" vValue="coin">
+                  <input type="radio" name="order" value="coin"> 硬币
+                </label>
+                <label class="am-btn am-btn-default am-btn-xs" vName="order" vValue="collect">
+                  <input type="radio" name="order" value="collect"> 收藏
+                </label>
+				<label class="am-btn am-btn-default am-btn-xs" vName="order" vValue="danmu">
+                  <input type="radio" name="order" value="danmu"> 弹幕
+                </label>
+              </div>
+            </div>
+</div>
+
+<div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">up主数量</div>
+            <div class="am-u-sm-8 am-u-md-10">
+              <div class="am-btn-group" data-am-button="">
+                <label class="am-btn am-btn-default am-btn-xs am-active" vName="limit" vValue="10">
+                  <input type="radio" name="limit" value="10"> 10
+                </label>
+                <label class="am-btn am-btn-default am-btn-xs" vName="limit" vValue="15">
+                  <input type="radio" name="limit" value="15"> 15
+                </label>
+                <label class="am-btn am-btn-default am-btn-xs" vName="limit" vValue="20">
+                  <input type="radio" name="limit" value="20"> 20
+                </label>
+              </div>
+            </div>
+</div>
+
+<div class="am-g am-margin-top">
+            <div class="am-u-sm-4 am-u-md-2 am-text-right">按视频平均数</div>
+            <div class="am-u-sm-8 am-u-md-10">
+              <div class="am-btn-group" data-am-button="">
+                <label class="am-btn am-btn-default am-btn-xs am-active" vName="average" vValue="0">
+                  <input type="radio" name="average" value="0"> 否
+                </label>
+                <label class="am-btn am-btn-default am-btn-xs" vName="average" vValue="1">
+                  <input type="radio" name="average" value="1"> 是
+                </label>
+              </div>
+            </div>
+</div>
+
 
 <script type="text/javascript">
 $(function(){
-	$("input").click(function(){
-		var order = $("input[name='order']:checked").val();
-		var limit = $("input[name='limit']:checked").val();
-		var average = $("input[name='average']:checked").val();
+	$(".am-btn-xs").change(function(){
+		$(this).siblings().removeClass("am-active");
+		$(this).addClass("am-active");
+		var order = $("label[vName='order'].am-active").attr("vValue");
+		var limit = $("label[vName='limit'].am-active").attr("vValue");
+		var average = $("label[vName='average'].am-active").attr("vValue");
 		
 		if(order !='' && limit!='' ){
 			run(order,limit,average);
 		}
 	});
+	
+	run("play",10,0);
 });
 </script>
 <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
