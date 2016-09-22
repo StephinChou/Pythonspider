@@ -25,7 +25,7 @@ def run():
     except:
         msg = "执行出错"
     finally:
-        print("当前时间{0} {1}".format(workTime,msg))    
+        print("当前时间{0} {1}".format(datetime.datetime.now(),msg))    
 
     #循环定时执行
     global t    #Notice: use global variable!
