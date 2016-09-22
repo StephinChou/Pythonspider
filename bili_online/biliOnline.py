@@ -29,6 +29,6 @@ def run():
 
     #循环定时执行
     global t    #Notice: use global variable!
-    t = Timer(300, run)
+    t = Timer(120, run)
     t.start()
 run()
