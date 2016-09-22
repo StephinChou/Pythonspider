@@ -3,13 +3,10 @@
 # @Date    : 2016-09-20 15:42:13
 # @Author  : waitingChou (zhouzt52@qq.com)
 # @Link    : https://github.com/StephinChou/
-
+__author__ = 'waiting'
 from spider import SpiderHTML
 from multiprocessing import Pool
-import sys,urllib,http,os,random,re,time,codecs
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
+import sys,urllib,http,os,re,time,codecs,json
 import pymysql
 pymysql.install_as_MySQLdb()
 
@@ -19,13 +16,10 @@ avSet = set([])
 for line in f:
     avSet = set(line.split(','))
 
-__author__ = 'waiting'
+#一些配置
 conn = pymysql.connect(host='localhost',user='root',passwd='',db='test',port=3306,use_unicode=True, charset="utf8")
 cur=conn.cursor()
 pattern = re.compile(r'\d+')    #获取av号的正则表达式
-driver = webdriver.Firefox()    #浏览器驱动，可以改成Chrome浏览器
-driver.implicitly_wait(5) # seconds
-
 orders = {"hot":"播放量","review":"评论数","promote":"硬币数","stow":"收藏数"}
 biliUrl = 'http://www.bilibili.com'
 
@@ -81,10 +75,10 @@ class BilibiliSpider(SpiderHTML):
                     AVInfo['author_name'] = video.find('a',class_='v-author').string            #作者
                     AVInfo['module'] = typeName                                                 #模块名
                     AVInfo['tid'] = tid                                                         #模块id
-                    coinInfo = self.parseAV(video.find('a',class_='title')['href'])             #解析详细视频页面获取硬币和收藏数
+                    coinInfo = self.parseAV(AVInfo['av'])             #解析详细视频页面获取硬币和收藏数
                     if coinInfo == 0:
                         sort=sort-1
-                        print("作品名：{title},【视频信息已消失，无法获取信息】".format(**AVInfo))
+                        print("作品名：{title},【视频信息获取失败】".format(**AVInfo))
                         continue
 
                     AVInfo['play'] = video.find('span',class_='v-info-i gk').span.string        #播放数
@@ -118,20 +112,14 @@ class BilibiliSpider(SpiderHTML):
     #解析单独的一个视频
     # @param avNum String video/av6315006/
     def parseAV(self,avNum):
-        url = biliUrl + avNum
+        url = "http://api.bilibili.com/archive_stat/stat?callback=&aid={av}&type=jsonp&_={time}".format(av=avNum,time=int(time.time()*1000))
         info = dict()
+
         try:
-            #防止有些页面响应慢 没有及时获取数据，重复抓取三次
-            for i in range(1,3):
-                driver.get(url)
-                shareElement = driver.find_element_by_xpath("//div[@class='block share initialized']/span[1]/div[1]/span[2]")
-                info['share'] = shareElement.text   #分享数
-                coinElement = driver.find_element_by_xpath("//div[@class='block coin']/span[1]/div[1]/span[2]")
-                info['coin'] = coinElement.text   #硬币数
-                if info['coin'] == '-' or info['share'] == '-' or info['coin'] == '':
-                    continue 
-                else:
-                    break
+            content = self.getUrl(url)
+            data = json.loads(str(content))
+            info['coin'] = data['data']['coin']
+            info['share'] = data['data']['share']
         except:
             return 0;
         return info
@@ -139,9 +127,9 @@ class BilibiliSpider(SpiderHTML):
 #module 为 分类 :游戏 game 舞蹈 dance等
 module = 'game'
 #热度统计开始时间
-start = '2016-08-01'
+start = '2016-07-01'
 #热度统计结束时间
-end = '2016-08-31'
+end = '2016-07-31'
 #单个模块排名获取个数100以内
 limit = 40
 spider = BilibiliSpider(module,start, end,limit)
