@@ -3,7 +3,7 @@
 * ~~需要安装selenium模块~~
 * ~~因为B站的数据由js获取，并且逻辑较为复杂，视频详细页的数据由 selenium模块来实现，效率不高，并且会miss~~
 * 关于selenium的信息，请谷歌"selenium python",这是我翻译的 [selenium + python 的文档](https://github.com/StephinChou/seleniumDocument),可以参考一下
-* 已解析出数据接口，直接获取视频数据，不使用webDriver，爬取速度提升数十倍 2016.9.22 
+* 已解析出数据接口，直接获取视频数据，不使用webDriver，爬取速度提升数十倍,并且不会miss数据2016.9.22 
 * @TODO 对爬取到的视频做日期归类（待完成）
 * 目前爬取的信息有：
  * up主id
