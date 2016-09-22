@@ -4,5 +4,5 @@
 * 构造php运行环境，配置data.php文件（推荐直接使用wamp）
 * 运行show.html 文件即可查看数据图标(注意data.php的**路径**)
 
-
+# 数据展示 
 ![](https://github.com/StephinChou/Pythonspider/blob/master/image/online.png)
