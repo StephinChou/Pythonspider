@@ -1,17 +1,26 @@
 #!/url/bin/env python
 # -*- coding: utf-8 -*-
 __author__ = 'waiting'
-import os,re,codecs,urllib
+import os,re,codecs,urllib,io,gzip,zlib
 from urllib import request
 from bs4 import BeautifulSoup
+import chardet
+
 
 class SpiderHTML(object):
 	#打开页面
 	def getUrl(self, url, coding='utf-8'):
 		req = request.Request(url)
 		req.add_header('User-Agent','Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 UBrowser/5.5.9703.2 Safari/537.36')
+		req.add_header('Accept-encoding', 'gzip')
 		with request.urlopen(req) as response:
-			return BeautifulSoup(response.read().decode(coding))
+			gzipd = response.headers.get('Content-Encoding')
+			if gzipd == 'gzip':
+				data = zlib.decompress(response.read(), 16+zlib.MAX_WBITS)
+
+			else:
+				data = response.read()
+			return BeautifulSoup(data.decode(coding))
 
 	#保存文本内容到本地
 	def saveText(self,filename,content,mode='w'):
